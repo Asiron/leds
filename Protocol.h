@@ -20,8 +20,15 @@ enum ASCIICodes {
   NACK = 21
 };
 
+enum class AnimationFlag {
+  HSV = (1<<0),
+  OtherFlag = (1<<1)
+};
+
+
+bool checkFlag(AnimationFlag flag, int flags);
+
 class AnimationManager;
-struct Color;
 
 class Protocol 
 {

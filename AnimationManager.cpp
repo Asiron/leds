@@ -15,9 +15,9 @@ inline void set_led_hsv(int i, int j, byte hue, byte sat, byte val)
 AnimationManager::AnimationManager()
 {
   setAnimation(AnimationType::Idle, 0);
-};
+}
 
-bool AnimationManager::setAnimation(AnimationType anim_type, int time_ms, Color color, int freq, int seed, int flags)
+bool AnimationManager::setAnimation(AnimationType anim_type, int time_ms, CRGB color, int freq, int seed, int flags)
 {
   if (time_ms == 0)
   {
@@ -105,7 +105,9 @@ void CommEstablishedAnimation(AnimationContext* ctx)
 {
   static int on = 0;
   
-  static NonBlockingWait timer(100);
+  static NonBlockingWait timer;
+
+  timer.wait_time = 1000000 / ctx->freq;
 
   if (timer.wait() == false)
   {
@@ -116,8 +118,8 @@ void CommEstablishedAnimation(AnimationContext* ctx)
   if (on == 1) {
     for (int j = 0; j < NUM_LEDS_PER_STRIP; j++)
     {
-      set_led(0, j, CRGB::Green);
-      set_led(1, j, CRGB::Green);
+      set_led(0, j, ctx->color);
+      set_led(1, j, ctx->color);
     }
   }
   else {
@@ -128,7 +130,6 @@ void CommEstablishedAnimation(AnimationContext* ctx)
     }
   } 
   LEDS.show();  
-  //LEDS.delay(100);
 }
 
 void RandomNoiseAnimation(AnimationContext* ctx)
@@ -177,8 +178,9 @@ void RandomNoiseAnimation(AnimationContext* ctx)
   }
 
   index %= NUM_LEDS_PER_STRIP;
-
-  hue = 0 + index * 3;
+  
+  hue = ctx->color.raw[0] + index * 3;
+  //hue = 0 + index * 3;
 
   for (int j = 0; j < index + 1; j++)
   {
@@ -191,9 +193,7 @@ void RandomNoiseAnimation(AnimationContext* ctx)
   }
   
   timer.wait_time = current_delay_time;
-  
   LEDS.show();
-  //LEDS.delay(current_delay_time);
 }
 
 void IdleAnimation(AnimationContext* ctx)

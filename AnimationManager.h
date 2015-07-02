@@ -49,18 +49,9 @@ struct NonBlockingWait {
   } 
 };
 
-struct Color {
-  Color() : c1(0), c2(0), c3(0) {};
-  Color(uint8_t c1, uint8_t c2, uint8_t c3)
-    : c1(c1), c2(c2), c3(c3) {};
-  uint8_t c1;
-  uint8_t c2;
-  uint8_t c3;
-};
-
 typedef struct {
   int time_ms;
-  Color color;
+  CRGB color;
   int freq;
   int seed;
   int flags;
@@ -68,6 +59,7 @@ typedef struct {
 
 void set_led(int i, int j, CRGB color);
 void set_led_hsv(int i, int j, byte hue, byte sat, byte val);
+
 
 void BootAnimation(AnimationContext* ctx);
 void CommEstablishedAnimation(AnimationContext* ctx);
@@ -90,7 +82,7 @@ class AnimationManager
     AnimationManager();
     ~AnimationManager() {};
 
-    bool setAnimation(AnimationType anim_type, int time_ms = 1000, Color color = Color(), int freq = 1000, int seed = 0, int flags = 0);
+    bool setAnimation(AnimationType anim_type, int time_ms = 1000, CRGB color = CRGB::Black, int freq = 1000, int seed = 0, int flags = 0);
     void displayCurrentAnimation();
 
   private:

@@ -1,5 +1,10 @@
 #include "Protocol.h"
 
+bool checkFlag(AnimationFlag flag, int flags)
+{
+  return flags & static_cast<int>(flag);
+}
+
 void Protocol::processByte(uint8_t rcv_byte)
 {
   
@@ -145,16 +150,21 @@ void Protocol::parseFrameAndSetAnimation()
   
   uint8_t col_1, col_2, col_3;
   
-  col_1 = frame_buffer[8];
+  col_1 = frame_buffer[10];
   col_2 = frame_buffer[9];
-  col_3 = frame_buffer[10];
+  col_3 = frame_buffer[8];
   
   uint32_t freq  = (*((uint32_t*)(&frame_buffer[12])));
   uint32_t seed  = (*((uint32_t*)(&frame_buffer[16])));
   uint32_t flags = (*((uint32_t*)(&frame_buffer[20])));
+
+  CRGB color;
  
-  Color color = Color(col_1, col_2, col_3);
- 
+  if (checkFlag(AnimationFlag::HSV, flags))
+    color = CHSV(col_1, col_2, col_3);
+  else
+    color = CRGB(col_1, col_2, col_3);
+    
   am.setAnimation(anim_type, time, color, freq, seed, flags);
  
   /*
