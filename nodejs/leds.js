@@ -96,7 +96,13 @@ var TeensyMediator = function() {
   var _this = this;
 
   this.teensy_connection = new TeensyConnection(function() {
-    _this.run_anim('no_anim', {});
+    _this.run_anim('comm_test', 
+    {
+    	"time"  : "2000",
+    	"freq"  : "3.0",
+    	"color" : "48FFFF",
+    	"hsv"   : "yes"
+    });
   });
 
   this.router = new Router(function(req, res, m) {
